@@ -9,6 +9,7 @@ class User:
     def __init__(self):
         self.chat_id = message.from_user.id
 
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     chat_id = message.from_user.id
