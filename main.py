@@ -24,7 +24,21 @@ def create_connection(host_name, user_name, user_password):
     return connection
 
 
-connection = create_connection("localhost", "root", "Qsf98%x$")
+connect_database = create_connection("localhost", "root", "Qsf98%x$")
+
+
+# Create DataBase
+def create_database(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        print("Database created successfully")
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+
+create_database_query = "CREATE DATABASE merch_telegram_bot_db"
+create_database(connect_database, create_database_query)
 
 
 user_data = {}
