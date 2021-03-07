@@ -86,7 +86,6 @@ class User(object):
         user_data['Last_name'] = self.last_name = last_name
         user_data['Phone'] = self.phone = phone
         user_data['Chat_id'] = self.chat_id = chat_id
-        print(user_data)
 
 
 @bot.message_handler(commands=['start'])
