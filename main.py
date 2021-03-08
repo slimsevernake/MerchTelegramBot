@@ -1,5 +1,6 @@
 # Import
 import telebot
+from telebot import types
 import mysql.connector
 from mysql.connector import Error
 
@@ -114,3 +115,10 @@ def send_welcome(message):
 
 
 bot.polling()
+
+markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard="true")
+itembtn1 = types.KeyboardButton('a')
+itembtn2 = types.KeyboardButton('v')
+itembtn3 = types.KeyboardButton('d')
+itembtn4 = types.KeyboardButton('v')
+markup.add(itembtn1, itembtn2, itembtn3, itembtn4)
