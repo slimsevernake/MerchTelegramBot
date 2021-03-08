@@ -7,9 +7,12 @@ from mysql.connector import Error
 token_bot = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
 bot = telebot.TeleBot(token_bot)
 
+user_data = {}
+
 
 # MySQL Connect
-def create_connection(host_name, user_name, user_password, database_name=""):
+def create_connection(host_name, user_name,
+                      user_password, database_name=""):
     connection = None
     try:
         connection = mysql.connector.connect(
@@ -26,7 +29,6 @@ def create_connection(host_name, user_name, user_password, database_name=""):
 
 
 connect_database = create_connection("localhost", "root", "Qsf98%x$")
-print(connect_database)
 
 
 # Create DataBase
@@ -70,14 +72,26 @@ def create_database(connection):
         print("Database created successfully")
         return connect_db
     except Error as e:
+        connect_db = create_connection("localhost",
+                                       "root",
+                                       "Qsf98%x$",
+                                       "merch_telegram_bot_db")
         print(f"The error '{e}' occurred")
+        return connect_db
 
 
 connect_database = create_database(connect_database)
-print(connect_database)
 
 
-user_data = {}
+# Insert DataBase
+def insert_database(connection, query, value):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query, value)
+        connection.commit()
+        print("Insert completed")
+    except Error as e:
+        print(f"The error '{e}' occurred")
 
 
 class User(object):
