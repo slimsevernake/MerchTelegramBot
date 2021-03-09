@@ -103,22 +103,32 @@ class User(object):
         user_data['Chat_id'] = self.chat_id = chat_id
 
 
+class KeyboardButton(object):
+    @staticmethod
+    def show_button():
+        markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard="true")
+        item_buy = types.KeyboardButton(text="Купить 💣")
+        item_basket = types.KeyboardButton(text="Корзина 🧺")
+        item_orders = types.KeyboardButton(text="Заказы 📦")
+        item_news = types.KeyboardButton(text="Новости 📜")
+        item_settings = types.KeyboardButton(text="Настройки ⚙")
+        item_help = types.KeyboardButton(text="Помощь 🆘")
+        markup.add(item_buy, item_basket, item_orders,
+                   item_news, item_settings, item_help)
+        return markup
+
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     user_object = User(message.from_user.first_name,
                        message.from_user.last_name,
                        message.from_user.id,
                        getattr(message, 'form_user.phone', 'false'))
+    main_menu = KeyboardButton.show_button()
     bot.send_message(user_data['Chat_id'],
                      'Lamp oil? Rope? Bombs? You want it? It\'s your\'s, '
-                     'my friend, as long as you have enough rupees.')
+                     'my friend, as long as you have enough rupees.',
+                     reply_markup=main_menu)
 
 
 bot.polling()
-
-markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard="true")
-itembtn1 = types.KeyboardButton('a')
-itembtn2 = types.KeyboardButton('v')
-itembtn3 = types.KeyboardButton('d')
-itembtn4 = types.KeyboardButton('v')
-markup.add(itembtn1, itembtn2, itembtn3, itembtn4)
