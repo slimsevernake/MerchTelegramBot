@@ -1,8 +1,7 @@
 # Import
 import telebot
-import psycopg2
+import database
 from telebot import types
-from psycopg2 import OperationalError
 
 # Bot Connect
 token_bot = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
@@ -10,26 +9,9 @@ bot = telebot.TeleBot(token_bot)
 
 user_data = {}
 
-
-# Test Connect
-def create_connection(db_name, db_user, db_password, db_host, db_port):
-    connection = None
-    try:
-        connection = psycopg2.connect(
-            database=db_name,
-            user=db_user,
-            password=db_password,
-            host=db_host,
-            port=db_port,
-        )
-        print("Connection to PostgreSQL DB successful")
-    except OperationalError as e:
-        print(f"The error '{e}' occurred")
-    return connection
-
-
-connection = create_connection(
-    "postgres", "postgres", "Qsf98%x$", "127.0.0.1", "5432"
+# database check connect
+connection = database.create_connection(
+    "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1", "5432"
 )
 connection.close()
 
