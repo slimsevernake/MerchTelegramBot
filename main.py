@@ -1,7 +1,7 @@
 # Import
 import telebot
 import database
-from telebot import types
+import keyboard_bot
 
 # Bot Connect
 token_bot = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
@@ -17,11 +17,16 @@ connection.close()
 
 
 class User(object):
-    def __init__(self, first_name, last_name, chat_id, phone="false"):
-        user_data['First_name'] = self.first_name = first_name
-        user_data['Last_name'] = self.last_name = last_name
-        user_data['Phone'] = self.phone = phone
-        user_data['Chat_id'] = self.chat_id = chat_id
+    def __init__(self, first_name, chat_id, last_name):
+        if last_name is None:
+            user_data['last_name'] = last_name = 'Отсутствует  🗿'
+        user_data['first_name'] = self.first_name = first_name
+        user_data['last_name'] = self.last_name = last_name
+        user_data['address'] = self.address = 'Отсутствует  🗿'
+        user_data['email'] = self.email = 'Отсутствует  🗿'
+        user_data['phone'] = self.phone = 'Отсутствует  🗿'
+        user_data['chat_id'] = self.chat_id = chat_id
+        print(user_data)
 
 
 class Product(object):
@@ -32,43 +37,25 @@ class Category(object):
     pass
 
 
-# Buttons
-def show_button():
-    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard="true")
-    item_buy = types.KeyboardButton(text="Купить 💣")
-    item_basket = types.KeyboardButton(text="Корзина 🧺")
-    item_orders = types.KeyboardButton(text="Заказы 📦")
-    item_news = types.KeyboardButton(text="Новости 📜")
-    item_settings = types.KeyboardButton(text="Настройки ⚙")
-    item_help = types.KeyboardButton(text="Помощь 🆘")
-    markup.add(item_buy, item_basket, item_orders,
-               item_news, item_settings, item_help)
-    return markup
-
-
-def show_inline_button_main_menu():
-    markup = types.InlineKeyboardMarkup(row_width=1)
-    item_bombs = types.InlineKeyboardButton(text="Бомбы 💣",
-                                            callback_data="bombs")
-    item_lamp_oil = types.InlineKeyboardButton(text="Ламповое масло 💣",
-                                               callback_data="lamp_oil")
-    item_rope = types.InlineKeyboardButton(text="Веревки 💣",
-                                           callback_data="rope")
-    markup.add(item_bombs, item_lamp_oil, item_rope)
-    return markup
-
-
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    main_menu = show_button()
+    main_menu = keyboard_bot.show_button()
     user_object = User(message.from_user.first_name,
-                       message.from_user.last_name,
                        message.from_user.id,
-                       getattr(message, 'form_user.phone', 'false'))
-    bot.send_message(user_data['Chat_id'],
-                     'Lamp oil? Rope? Bombs? You want it? It\'s your\'s, '
+                       message.from_user.last_name)
+    bot.send_message(user_object.chat_id, 'Hi! ' + user_object.first_name +
+                     '\nLamp oil? Rope? Bombs? You want it? It\'s your\'s, '
                      'my friend, as long as you have enough rupees.',
                      reply_markup=main_menu)
+    bot.send_message(user_object.chat_id,
+                     'На данный момент твой профиль выглядит так: '
+                     '\nИмя: ' + user_object.first_name +
+                     '\nФамилия: ' + user_object.last_name +
+                     '\nАдрес: ' + user_object.address +
+                     '\nE-mail: ' + user_object.email +
+                     '\nТелефон: ' + user_object.phone +
+                     '\nДля того что бы отредактировать имеющиеся данные '
+                     'перейдите в настройки')
 
 
 bot.polling()
