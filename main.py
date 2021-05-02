@@ -44,19 +44,11 @@ def send_welcome(message):
     user_object = User(message.from_user.first_name,
                        message.from_user.id,
                        message.from_user.last_name)
-    bot.send_message(user_object.chat_id, 'Hi! ' + user_object.first_name +
-                     '\nLamp oil? Rope? Bombs? You want it? It\'s your\'s, '
-                     'my friend, as long as you have enough rupees.',
+    bot.send_message(user_object.chat_id, user_object.first_name +
+                     '\nЛамповое масло? Веревки? Бомбы?'
+                     '\nТебе всё это нужно?'
+                     '\nОно твоё, мой друг... если у тебя достаточно рупий 💎',
                      reply_markup=main_menu)
-    bot.send_message(user_object.chat_id,
-                     'На данный момент твой профиль выглядит так: '
-                     '\nИмя: ' + user_object.first_name +
-                     '\nФамилия: ' + user_object.last_name +
-                     '\nАдрес: ' + user_object.address +
-                     '\nE-mail: ' + user_object.email +
-                     '\nТелефон: ' + user_object.phone +
-                     '\nДля того что бы отредактировать имеющиеся данные '
-                     'перейдите в настройки')
 
 
 @bot.message_handler(content_types=['text'])
