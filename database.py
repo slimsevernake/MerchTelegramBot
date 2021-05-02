@@ -1,4 +1,5 @@
 import psycopg2
+import query
 from psycopg2 import OperationalError
 
 
@@ -42,48 +43,22 @@ try:
 except psycopg2.errors.DuplicateDatabase:
     print("The database already exists! I continue to execute the program.")
 
-query = ("CREATE TABLE customer ("
-         "id SERIAL PRIMARY KEY,"
-         "first_name VARCHAR(255),"
-         "last_name VARCHAR(255),"
-         "adds VARCHAR(255),"
-         "email VARCHAR(255),"
-         "phone VARCHAR(255),"
-         "chat_id INT UNIQUE)",
-         "CREATE TABLE category ("
-         "id SERIAL PRIMARY KEY,"
-         "category_name VARCHAR(255))",
-         "CREATE TABLE product ("
-         "id SERIAL PRIMARY KEY,"
-         "category_id INT,"
-         "name VARCHAR(255),"
-         "description TEXT,"
-         "price INT,"
-         "FOREIGN KEY (category_id) REFERENCES category(id))",
-         "CREATE TABLE product_photo ("
-         "id SERIAL PRIMARY KEY,"
-         "url VARCHAR(255),"
-         "product_id INT,"
-         "FOREIGN KEY (product_id) REFERENCES product(id))",
-         "CREATE TABLE cart ("
-         "id SERIAL PRIMARY KEY,"
-         "customer_id INT,"
-         "FOREIGN KEY(customer_id) REFERENCES customer(id))",
-         "CREATE TABLE cart_product ("
-         "cart_id INT,"
-         "product_id INT,"
-         "FOREIGN KEY(product_id) REFERENCES product(id),"
-         "FOREIGN KEY(cart_id) REFERENCES cart(id))"
-         )
-for i in query:
+
+for key in query.default_query:
     try:
         connection = create_connection(
             "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
             "5432"
         )
-        execution_of_requests(connection, i)
+        execution_of_requests(connection, query.default_query[key])
         connection.close()
     except OperationalError as e:
         print(f"The error '{e}' occurred")
+
+
+# sql queries
+def creating_record(user_object):
+    pass
+
 
 print("Closing the program.")

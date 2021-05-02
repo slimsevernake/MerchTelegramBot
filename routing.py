@@ -10,7 +10,6 @@ bot = telebot.TeleBot(token_bot)
 # Routing
 def routing_bot(message):
     message.text = message.text.replace(" ", "").lower()
-    print(message.text)
     if re.findall(r'купить💣', message.text):
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Купить 💣'")
     elif re.findall(r'корзина🧺', message.text):

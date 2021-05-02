@@ -20,9 +20,10 @@ connection.close()
 class User(object):
     def __init__(self, first_name, chat_id, last_name):
         if last_name is None:
-            user_data['last_name'] = last_name = 'Отсутствует  🗿'
+            user_data['last_name'] = self.last_name = 'Отсутствует  🗿'
+        else:
+            user_data['last_name'] = self.last_name = last_name
         user_data['first_name'] = self.first_name = first_name
-        user_data['last_name'] = self.last_name = last_name
         user_data['address'] = self.address = 'Отсутствует  🗿'
         user_data['email'] = self.email = 'Отсутствует  🗿'
         user_data['phone'] = self.phone = 'Отсутствует  🗿'
@@ -51,7 +52,7 @@ def send_welcome(message):
 
 
 @bot.message_handler(content_types=['text'])
-def guide_func(message):
+def handler_func(message):
     routing.routing_bot(message)
 
 
