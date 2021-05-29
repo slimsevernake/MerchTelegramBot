@@ -1,14 +1,13 @@
 # Import
-import telebot
+import telebot as tel
 import database
-import keyboard_bot
+import keyboard_bot as keyboard
 import routing
+import re
 
 # Bot Connect
 token_bot = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
-bot = telebot.TeleBot(token_bot)
-
-user_data = {}
+bot = tel.TeleBot(token_bot)
 
 # database check connect
 connection = database.create_connection(
@@ -17,34 +16,18 @@ connection = database.create_connection(
 connection.close()
 
 
-class User(object):
-    def __init__(self, first_name, chat_id, last_name):
-        if last_name is None:
-            user_data['last_name'] = self.last_name = 'Отсутствует  🗿'
-        else:
-            user_data['last_name'] = self.last_name = last_name
-        user_data['first_name'] = self.first_name = first_name
-        user_data['address'] = self.address = 'Отсутствует  🗿'
-        user_data['email'] = self.email = 'Отсутствует  🗿'
-        user_data['phone'] = self.phone = 'Отсутствует  🗿'
-        user_data['chat_id'] = self.chat_id = chat_id
-
-
-class Product(object):
-    pass
-
-
-class Category(object):
-    pass
-
-
 @bot.message_handler(commands=['start'])
+def verification_user(message):
+    if len(database.ProfileInteraction.verification_user(message)) == 0:
+        import register
+        register.send_welcome(message)
+    else:
+        send_welcome(message)
+
+
 def send_welcome(message):
-    main_menu = keyboard_bot.show_button_main_menu()
-    user_object = User(message.from_user.first_name,
-                       message.from_user.id,
-                       message.from_user.last_name)
-    bot.send_message(user_object.chat_id, user_object.first_name +
+    main_menu = keyboard.show_button_main_menu()
+    bot.send_message(message.from_user.id, message.from_user.first_name +
                      '\nЛамповое масло? Веревки? Бомбы?'
                      '\nТебе всё это нужно?'
                      '\nОно твоё, мой друг... если у тебя достаточно рупий 💎',

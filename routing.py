@@ -10,44 +10,44 @@ bot = telebot.TeleBot(token_bot)
 # Routing
 def routing_bot(message):
     message.text = message.text.replace(" ", "").lower()
-    if re.findall(r'купить💣', message.text):
+    if re.findall(r'купить💣' or r'купить', message.text):
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Купить 💣'")
-    elif re.findall(r'корзина🧺', message.text):
+    elif re.findall(r'корзина🧺' or r'корзина', message.text):
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Корзина 🧺'")
-    elif re.findall(r'заказы📦', message.text):
+    elif re.findall(r'заказы📦' or r'заказы', message.text):
         main_menu = keyboard_bot.show_button_orders()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Заказы 📦'",
                          reply_markup=main_menu)
-    elif re.findall(r'новости📜', message.text):
+    elif re.findall(r'новости📜' or r'новости', message.text):
         main_menu = keyboard_bot.show_button_news()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Новости 📜'",
                          reply_markup=main_menu)
-    elif re.findall(r'настройки⚙', message.text):
+    elif re.findall(r'настройки⚙' or r'настройки', message.text):
         main_menu = keyboard_bot.show_button_settings()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Настройки ⚙'",
                          reply_markup=main_menu)
-    elif re.findall(r'помощь🆘', message.text):
+    elif re.findall(r'помощь🆘' or r'помощь', message.text):
         main_menu = keyboard_bot.show_button_help()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Помощь 🆘'",
                          reply_markup=main_menu)
-    elif re.findall(r'начало🏠', message.text):
+    elif re.findall(r'начало🏠' or r'начало', message.text):
         main_menu = keyboard_bot.show_button_main_menu()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Начало🏠'",
                          reply_markup=main_menu)
-    elif re.findall(r'позвонить📞', message.text):
+    elif re.findall(r'позвонить📞' or r'позвонить', message.text):
         main_menu = keyboard_bot.show_button_help()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Позвонить 📞'",
                          reply_markup=main_menu)
-    elif re.findall(r'написать✉', message.text):
+    elif re.findall(r'написать✉' or r'написать', message.text):
         main_menu = keyboard_bot.show_button_help()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Написать ✉'",
                          reply_markup=main_menu)
-    elif re.findall(r'помощьнасайте📘', message.text):
+    elif re.findall(r'помощьнасайте📘' or r'помощьнасайте', message.text):
         main_menu = keyboard_bot.show_button_help()
         bot.send_message(message.chat.id,
                          "Выбран пункт меню: 'Помощь на сайте 📘'",
                          reply_markup=main_menu)
-    elif re.findall(r'назад⬅', message.text):
+    elif re.findall(r'назад⬅' or r'назад', message.text):
         main_menu = keyboard_bot.show_button_main_menu()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Назад ⬅'",
                          reply_markup=main_menu)
@@ -67,7 +67,11 @@ def routing_bot(message):
         main_menu = keyboard_bot.show_button_settings()
         bot.send_message(message.chat.id, "Выбран пункт меню: 'Город'",
                          reply_markup=main_menu)
-    elif re.findall(r'уведомления🔔', message.text):
+    elif re.findall(r'мойпрофиль👤' or r'мойпрофиль', message.text):
+        main_menu = keyboard_bot.show_button_settings()
+        bot.send_message(message.chat.id, "Выбран пункт меню: 'Мой профиль 👤'",
+                         reply_markup=main_menu)
+    elif re.findall(r'уведомления🔔' or r'уведомления', message.text):
         main_menu = keyboard_bot.show_button_settings()
         bot.send_message(message.chat.id,
                          "Выбран пункт меню: 'Уведомления 🔔'",
