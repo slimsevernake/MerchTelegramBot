@@ -52,3 +52,6 @@ query_register = dict(insert_register_data=(
     email, phone, chat_id) 
     values (%s, %s, %s, %s, %s, %s, %s) """
 ))
+check_database = dict(check=(
+    "SELECT * FROM pg_database WHERE datname='merch_telegram_bot_db'"
+))

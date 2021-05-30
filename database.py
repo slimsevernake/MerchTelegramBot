@@ -32,31 +32,33 @@ def execution_of_requests(connection_db, query_sql, data=None):
     try:
         cursor.execute(query_sql, data)
         result = cursor.fetchall()
-        print("Query executed successfully")
         return result
     except psycopg2.errors.DuplicateTable:
         print("Error: DuplicateTable")
     except psycopg2.errors.UniqueViolation:
         print("Error: UniqueViolation")
+    except Exception:
+        pass
 
 
-try:
-    sql = "CREATE DATABASE merch_telegram_bot_db"
-    execution_of_requests(connection, sql)
-    connection.close()
-except psycopg2.errors.DuplicateDatabase:
-    print("The database already exists! I continue to execute the program.")
-
-for key in query.create_database:
+def create_database(connection):
     try:
-        connection = create_connection(
-            "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
-            "5432"
-        )
-        execution_of_requests(connection, query.create_database[key])
+        sql = "CREATE DATABASE merch_telegram_bot_db"
+        execution_of_requests(connection, sql)
         connection.close()
-    except OperationalError as e:
-        print(f"The error '{e}' occurred")
+    except psycopg2.errors.DuplicateDatabase:
+        print(
+            "The database already exists! I continue to execute the program.")
+    for key in query.create_database:
+        try:
+            connection = create_connection(
+                "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+                "5432"
+            )
+            execution_of_requests(connection, query.create_database[key])
+            connection.close()
+        except OperationalError as e:
+            print(f"The error '{e}' occurred")
 
 
 # sql queries
@@ -107,7 +109,7 @@ class ProfileInteraction(classmethod):
         )
         data = self.from_user.id
         query_verification = dict(verification=(
-            f"select * from customer where chat_id = '25125125'"
+            f"select * from customer where chat_id = '{data}'"
         ))
         result = execution_of_requests(connection,
                                        query_verification['verification'],
@@ -116,4 +118,7 @@ class ProfileInteraction(classmethod):
         return result
 
 
-print("Closing the program.")
+if execution_of_requests(connection, query.check_database['check']):
+    print("The database already exists")
+else:
+    create_database(connection)
