@@ -81,3 +81,73 @@ def show_button_update():
     item_back_update = types.KeyboardButton(text="Назад ⬅")
     markup.add(item_start_update, item_back_update)
     return markup
+
+
+def show_category(data):
+    markup = types.InlineKeyboardMarkup()
+    for i in data:
+        markup.add(types.InlineKeyboardButton(text=f"{i[1]}",
+                                              callback_data=f"cat_{i[0]}"))
+    return markup
+
+
+def show_product(data):
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton(text=f"Купить - {data[4]} "
+                                               f"рупий (1 шт.)",
+                                          callback_data=f"prod_{data[1]}"))
+    return markup
+
+
+def cart_keyboard(prev_el, next_el, index, quantity, quantity_product):
+    markup = types.InlineKeyboardMarkup()
+    delete_product = types.InlineKeyboardButton(text="❌",
+                                                callback_data=f"delete_"
+                                                              f"{index}")
+    remove_product = types.InlineKeyboardButton(text="⬇",
+                                                callback_data=f"remove_"
+                                                              f"{index}")
+    quantity = types.InlineKeyboardButton(text=f"{quantity} шт.",
+                                          callback_data="quantity")
+    add_product = types.InlineKeyboardButton(text="⬆",
+                                             callback_data=f"add_{index}")
+    prev_product = types.InlineKeyboardButton(text="⬅",
+                                              callback_data=f"prev_{prev_el}")
+    quantity_product = types.InlineKeyboardButton(text=f"{index + 1}/"
+                                                       f"{quantity_product + 1}",
+                                                  callback_data="quantity")
+    next_product = types.InlineKeyboardButton(text="➡",
+                                              callback_data=f"next_{next_el}")
+    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {0} рупий, "
+                                                f"Оформить?",
+                                           callback_data="order")
+    continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
+                                               callback_data="continue")
+    markup.row(delete_product, remove_product, quantity, add_product)
+    markup.row(prev_product, quantity_product, next_product)
+    markup.row(order_pay)
+    markup.row(continue_shop)
+    return markup
+
+
+def cart_keyboard_min(index, quantity):
+    markup = types.InlineKeyboardMarkup()
+    delete_product = types.InlineKeyboardButton(text="❌",
+                                                callback_data=f"delete_"
+                                                              f"{index}")
+    remove_product = types.InlineKeyboardButton(text="⬇",
+                                                callback_data=f"remove_"
+                                                              f"{index}")
+    quantity = types.InlineKeyboardButton(text=f"{quantity} шт.",
+                                          callback_data="quantity")
+    add_product = types.InlineKeyboardButton(text="⬆",
+                                             callback_data=f"add_{index}")
+    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {0} рупий, "
+                                                f"Оформить?",
+                                           callback_data="order")
+    continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
+                                               callback_data="continue")
+    markup.row(delete_product, remove_product, quantity, add_product)
+    markup.row(order_pay)
+    markup.row(continue_shop)
+    return markup

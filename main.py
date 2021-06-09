@@ -1,8 +1,8 @@
 # Import Bot Module
 import keyboard_bot as keyboard
 import database
-import required
 import routing
+import interface
 # Import Python Module
 import re
 import threading
@@ -60,13 +60,12 @@ class Register:
                                          'Москва, 121309',
                                    reply_markup=skip_button)
                 bot.register_next_step_handler(msg,
-                                               Register.
-                                               process_address_delivery_step)
+                                               Register.process_address_step)
         except Exception as e:
-            bot.reply_to(self, 'Фатальная ошибка!')
+            print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
-    def process_address_delivery_step(self):
+    def process_address_step(self):
         try:
             user_response = self.text.replace(" ", "").lower()
             if re.findall(r'пропуститьшаг✏' or r'пропуститьшаг',
@@ -90,7 +89,7 @@ class Register:
                                              'Москва, 121309')
                     bot.register_next_step_handler(msg,
                                                    Register.
-                                                   process_address_delivery_step)
+                                                   process_address_step)
                 else:
                     delete_keyboards = keyboard.delete_keyboard()
                     user_response = ' '.join(user_response)
@@ -102,7 +101,7 @@ class Register:
                     bot.register_next_step_handler(msg, Register.
                                                    process_email_step)
         except Exception as e:
-            bot.reply_to(self, 'Фатальная ошибка!')
+            print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
     def process_email_step(self):
@@ -124,7 +123,7 @@ class Register:
                 bot.register_next_step_handler(msg, Register.
                                                process_phone_step)
         except Exception as e:
-            bot.reply_to(self, 'Фатальная ошибка!')
+            print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
     def process_phone_step(self):
@@ -158,13 +157,14 @@ class Register:
                                  reply_markup=main_menu)
                 user_object = User(user_dict['first_name'],
                                    user_dict['last_name'],
-                                   user_dict['address'], user_dict['email'],
+                                   user_dict['address'],
+                                   user_dict['email'],
                                    user_dict['phone'],
                                    self.from_user.username,
                                    self.from_user.id)
                 database.ProfileInteraction.insert_record(user_object)
         except Exception as e:
-            bot.reply_to(self, 'Фатальная ошибка!')
+            print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
 
@@ -193,7 +193,7 @@ def bot_polling():
 def bot_actions():
     @bot.message_handler(commands=['start'])
     def test_function(message):
-        if len(database.ProfileInteraction.verification_user(message)) == 0:
+        if database.ProfileInteraction.verification_user(message) is False:
             register_menu = keyboard.show_button_register()
             # main_menu = keyboard.show_button_main_menu()
             bot.send_message(message.from_user.id,
@@ -217,7 +217,7 @@ def bot_actions():
                              reply_markup=main_menu)
 
     @bot.message_handler(content_types=['text'])
-    def register_function(message):
+    def redirecting_bot(message):
         message.text = message.text.replace(" ", "").lower()
         if re.findall(r'зарегистрироваться✏' or r'зарегистрироваться',
                       message.text):
@@ -227,10 +227,21 @@ def bot_actions():
                                         'Например: Иванов Иван',
                                reply_markup=delete_keyboards)
             bot.register_next_step_handler(msg, Register.process_name_step)
-        elif len(database.ProfileInteraction.verification_user(message)) == 1:
+        elif database.ProfileInteraction.verification_user(message) is True:
             routing.routing_bot(message)
         else:
-            bot.reply_to(message, 'Нажмите кнопку "Зарегистрироваться ✏"')
+            register_menu = keyboard.show_button_register()
+            bot.reply_to(message, 'Нажмите кнопку "Зарегистрироваться ✏"',
+                         reply_markup=register_menu)
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback_response(call):
+        try:
+            if call.message:
+                interface.InterfaceInteraction.callback_data_handler(call)
+        except Exception as e:
+            print('Фатальная ошибка!' + f'\n{str(e)}')
+            return
 
 
 polling_thread = threading.Thread(target=bot_polling)
