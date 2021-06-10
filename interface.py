@@ -161,8 +161,6 @@ class InterfaceInteraction(classmethod):
 
     def delete_product(self):
         try:
-            index_str = extract_id(self.data)
-            index = int(index_str[1])
             connection = db.create_connection(
                 "merch_telegram_bot_db", "postgres", "Qsf98%x$",
                 "127.0.0.1",
@@ -170,8 +168,10 @@ class InterfaceInteraction(classmethod):
             )
             query = q.interface_query[
                         'display_product_cart'] + str(self.from_user.id)
-            cart = db.execution_of_requests(connection, query)
-            cart = sorted(list(set(cart)))
+            response = db.execution_of_requests(connection, query)
+            cart = sorted(list(set(response)))
+            index_str = extract_id(self.data)
+            index = int(index_str[1])
             product_id = cart[index][0]
             query = f"""DELETE FROM cart_product WHERE 
             cart_product.cart_id = (SELECT cart_id FROM cart WHERE 
@@ -181,6 +181,60 @@ class InterfaceInteraction(classmethod):
             db.execution_of_requests(connection, query)
             connection.close()
             InterfaceInteraction.cart(self, delete=True)
+        except Exception as e:
+            print('Фатальная ошибка!' + f'\n{str(e)}')
+            return
+
+    def add_product(self):
+        try:
+            connection = db.create_connection(
+                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "127.0.0.1",
+                "5432"
+            )
+            query = q.interface_query[
+                        'display_product_cart'] + str(self.from_user.id)
+            response = db.execution_of_requests(connection, query)
+            cart = sorted(list(set(response)))
+            index_str = extract_id(self.data)
+            index = int(index_str[1])
+            product_id = cart[index][0]
+            query = q.interface_query['cart_id_info'] + str(self.from_user.id)
+            cart_id = db.execution_of_requests(connection, query)
+            query = q.interface_query['add_product_cart']
+            data = (cart_id[0][0], product_id)
+            db.execution_of_requests(connection, query, data)
+            connection.close()
+            InterfaceInteraction.cart(self)
+            InterfaceInteraction.alert(self, "Товар добавлен в корзину")
+        except Exception as e:
+            print('Фатальная ошибка!' + f'\n{str(e)}')
+            return
+
+    def remove_product(self):
+        try:
+            connection = db.create_connection(
+                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "127.0.0.1",
+                "5432"
+            )
+            query = q.interface_query[
+                        'display_product_cart'] + str(self.from_user.id)
+            response = db.execution_of_requests(connection, query)
+            cart = sorted(list(set(response)))
+            index_str = extract_id(self.data)
+            index = int(index_str[1])
+            product_id = cart[index][0]
+            query = q.interface_query['cart_id_info'] + str(self.from_user.id)
+            response = db.execution_of_requests(connection, query)
+            cart_id = response[0][0]
+            query = f"""DELETE FROM cart_product WHERE ctid IN(SELECT ctid 
+            FROM cart_product WHERE cart_id={cart_id} AND 
+            product_id={product_id} LIMIT 1)"""
+            db.execution_of_requests(connection, query)
+            connection.close()
+            InterfaceInteraction.cart(self)
+            InterfaceInteraction.alert(self, "Товар убран из корзины.")
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
@@ -223,15 +277,9 @@ class InterfaceInteraction(classmethod):
             elif id_element[0] == 'delete':
                 InterfaceInteraction.delete_product(self)
             elif id_element[0] == 'remove':
-                pass
+                InterfaceInteraction.remove_product(self)
             elif id_element[0] == 'add':
-                query = q.interface_query['cart_id_info'] + \
-                        str(self.from_user.id)
-                cart_id = db.execution_of_requests(connection, query)
-                query = q.interface_query['add_product_cart']
-                data = (cart_id[0][0], id_element[1])
-                db.execution_of_requests(connection, query, data)
-                InterfaceInteraction.alert(self, "Товар добавлен в корзину")
+                InterfaceInteraction.add_product(self)
             elif id_element[0] == 'prev':
                 InterfaceInteraction.cart(self)
             elif id_element[0] == 'next':
