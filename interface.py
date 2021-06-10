@@ -233,7 +233,7 @@ class InterfaceInteraction(classmethod):
             product_id={product_id} LIMIT 1)"""
             db.execution_of_requests(connection, query)
             connection.close()
-            InterfaceInteraction.cart(self)
+            InterfaceInteraction.cart(self, delete=True)
             InterfaceInteraction.alert(self, "Товар убран из корзины.")
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
