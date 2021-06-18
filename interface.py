@@ -52,12 +52,19 @@ class InterfaceInteraction(classmethod):
                 bot.send_message(self.chat.id, "В корзине пусто 😔")
             elif len(cart) == 1:
                 index = 0
+                amount = 0
                 quantity = len([i for i, x in enumerate(response)
                                 if x == cart[index]])
-                cart_keyboard = key.cart_keyboard_min(index, quantity)
+                for i in response:
+                    amount += i[3]
+                cart_keyboard = key.cart_keyboard_min(index, quantity, amount)
                 bot.send_message(self.chat.id, "Корзина:\n")
-                bot.send_message(self.chat.id, f"{cart[index][1]}\n"
-                                               f"{cart[index][2]}\n"
+                bot.send_message(self.chat.id, f"Название: {cart[index][1]}\n"
+                                               f"Описание: {cart[index][2]}\n"
+                                               f"Кол-во: {quantity}\n"
+                                               f"{str(cart[index][3])} руб * "
+                                               f"{str(quantity)} шт = "
+                                               f"{cart[index][3] * quantity}"
                                                f"<a href='{cart[index][4]}'>"
                                                f"&#8203;</a>",
                                  parse_mode="HTML",
@@ -65,19 +72,26 @@ class InterfaceInteraction(classmethod):
             else:
                 cart = sorted(cart)
                 index = 0
+                amount = 0
                 quantity = len([i for i, x in enumerate(response)
                                 if x == cart[index]])
                 prev_item = cart.index(cart[index - 1])
                 next_item = cart.index(cart[index + 1])
                 quantity_product = (len(cart) - 1)
+                for i in response:
+                    amount += i[3]
                 cart_keyboard = key.cart_keyboard(prev_item, next_item, index,
-                                                  quantity, quantity_product)
+                                                  quantity, quantity_product,
+                                                  amount)
                 bot.send_message(self.chat.id, "Корзина:\n")
-                bot.send_message(self.chat.id, f"{cart[index][1]}\n"
-                                               f"{cart[index][2]}\n"
+                bot.send_message(self.chat.id, f"Название: {cart[index][1]}\n"
+                                               f"Описание: {cart[index][2]}\n"
+                                               f"Кол-во: {quantity}\n"
+                                               f"{str(cart[index][3])} руб * "
+                                               f"{str(quantity)} шт = "
+                                               f"{cart[index][3] * quantity}"
                                                f"<a href='{cart[index][4]}'>"
-                                               f"&#8203 "
-                                               f";</a>",
+                                               f"&#8203;</a>",
                                  parse_mode="HTML",
                                  reply_markup=cart_keyboard)
                 connection.close()
@@ -102,20 +116,28 @@ class InterfaceInteraction(classmethod):
                                       text="В корзине пусто 😔")
             elif len(cart) == 1:
                 index = 0
+                amount = 0
                 quantity = len([i for i, x in enumerate(response)
                                 if x == cart[index]])
-                cart_keyboard = key.cart_keyboard_min(index, quantity)
+                for i in response:
+                    amount += i[3]
+                cart_keyboard = key.cart_keyboard_min(index, quantity, amount)
                 bot.edit_message_text(chat_id=self.message.chat.id,
                                       message_id=self.message.message_id,
-                                      text=f"{cart[index][1]}\n"
-                                           f"{cart[index][2]}\n"
-                                           f"<a href='{cart[index][4]}'>&#8203"
-                                           f";</a>",
+                                      text=f"Название: {cart[index][1]}\n"
+                                           f"Описание: {cart[index][2]}\n"
+                                           f"Кол-во: {quantity}\n"
+                                           f"{str(cart[index][3])} руб * "
+                                           f"{str(quantity)} шт = "
+                                           f"{cart[index][3] * quantity}"
+                                           f"<a href='{cart[index][4]}'>"
+                                           f"&#8203;</a>",
                                       parse_mode="HTML",
                                       reply_markup=cart_keyboard)
             else:
                 index_str = extract_id(self.data)
                 index = int(index_str[1])
+                amount = 0
                 cart = sorted(cart)
                 prev_item = cart.index(cart[index - 1])
                 if index == cart.index(cart[-1]):
@@ -123,35 +145,43 @@ class InterfaceInteraction(classmethod):
                     quantity = len([i for i, x in enumerate(response)
                                     if x == cart[index]])
                     quantity_product = (len(cart) - 1)
+                    for i in response:
+                        amount += i[3]
                     cart_keyboard = key.cart_keyboard(prev_item, next_item,
-                                                      index,
-                                                      quantity,
-                                                      quantity_product)
+                                                      index, quantity,
+                                                      quantity_product, amount)
                 elif delete is True:
                     index = 0
+                    amount = 0
                     next_item = cart.index(cart[index - (len(cart) - 1)])
                     quantity = len([i for i, x in enumerate(response)
                                     if x == cart[index]])
                     quantity_product = (len(cart) - 1)
+                    for i in response:
+                        amount += i[3]
                     cart_keyboard = key.cart_keyboard(prev_item, next_item,
-                                                      index,
-                                                      quantity,
-                                                      quantity_product)
+                                                      index, quantity,
+                                                      quantity_product, amount)
                 else:
                     next_item = cart.index(cart[index + 1])
                     quantity = len([i for i, x in enumerate(response)
                                     if x == cart[index]])
                     quantity_product = (len(cart) - 1)
+                    for i in response:
+                        amount += i[3]
                     cart_keyboard = key.cart_keyboard(prev_item, next_item,
-                                                      index,
-                                                      quantity,
-                                                      quantity_product)
+                                                      index, quantity,
+                                                      quantity_product, amount)
                 bot.edit_message_text(chat_id=self.message.chat.id,
                                       message_id=self.message.message_id,
-                                      text=f"{cart[index][1]}\n"
-                                           f"{cart[index][2]}\n"
-                                           f"<a href='{cart[index][4]}'>&#8203"
-                                           f";</a>",
+                                      text=f"Название: {cart[index][1]}\n"
+                                           f"Описание: {cart[index][2]}\n"
+                                           f"Кол-во: {quantity}\n"
+                                           f"{str(cart[index][3])} руб * "
+                                           f"{str(quantity)} шт = "
+                                           f"{cart[index][3] * quantity}"
+                                           f"<a href='{cart[index][4]}'>"
+                                           f"&#8203;</a>",
                                       parse_mode="HTML",
                                       reply_markup=cart_keyboard)
             connection.close()
@@ -173,14 +203,20 @@ class InterfaceInteraction(classmethod):
             index_str = extract_id(self.data)
             index = int(index_str[1])
             product_id = cart[index][0]
-            query = f"""DELETE FROM cart_product WHERE 
-            cart_product.cart_id = (SELECT cart_id FROM cart WHERE 
-            cart.customer_id=(SELECT customer_id FROM customer WHERE 
-            customer.chat_id = {self.message.chat.id})) AND cart_product
-            .product_id = {product_id} """
-            db.execution_of_requests(connection, query)
-            connection.close()
-            InterfaceInteraction.cart(self, delete=True)
+            if product_id is None:
+                InterfaceInteraction.alert(self, "Данное предложение уже "
+                                                 "не актуально")
+                bot.delete_message(self.message.chat.id,
+                                   self.message.message_id)
+            else:
+                query = f"""DELETE FROM cart_product WHERE 
+                cart_product.cart_id = (SELECT cart_id FROM cart WHERE 
+                cart.customer_id=(SELECT customer_id FROM customer WHERE 
+                customer.chat_id = {self.message.chat.id})) AND cart_product
+                .product_id = {product_id} """
+                db.execution_of_requests(connection, query)
+                connection.close()
+                InterfaceInteraction.cart(self, delete=True)
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
@@ -199,14 +235,21 @@ class InterfaceInteraction(classmethod):
             index_str = extract_id(self.data)
             index = int(index_str[1])
             product_id = cart[index][0]
-            query = q.interface_query['cart_id_info'] + str(self.from_user.id)
-            cart_id = db.execution_of_requests(connection, query)
-            query = q.interface_query['add_product_cart']
-            data = (cart_id[0][0], product_id)
-            db.execution_of_requests(connection, query, data)
-            connection.close()
-            InterfaceInteraction.cart(self)
-            InterfaceInteraction.alert(self, "Товар добавлен в корзину")
+            if product_id is None:
+                InterfaceInteraction.alert(self, "Данное предложение уже "
+                                                 "не актуально")
+                bot.delete_message(self.message.chat.id,
+                                   self.message.message_id)
+            else:
+                query = q.interface_query['cart_id_info'] + \
+                        str(self.from_user.id)
+                cart_id = db.execution_of_requests(connection, query)
+                query = q.interface_query['add_product_cart']
+                data = (cart_id[0][0], product_id)
+                db.execution_of_requests(connection, query, data)
+                connection.close()
+                InterfaceInteraction.cart(self)
+                InterfaceInteraction.alert(self, "Товар добавлен в корзину")
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
@@ -225,16 +268,30 @@ class InterfaceInteraction(classmethod):
             index_str = extract_id(self.data)
             index = int(index_str[1])
             product_id = cart[index][0]
-            query = q.interface_query['cart_id_info'] + str(self.from_user.id)
-            response = db.execution_of_requests(connection, query)
-            cart_id = response[0][0]
-            query = f"""DELETE FROM cart_product WHERE ctid IN(SELECT ctid 
-            FROM cart_product WHERE cart_id={cart_id} AND 
-            product_id={product_id} LIMIT 1)"""
-            db.execution_of_requests(connection, query)
-            connection.close()
-            InterfaceInteraction.cart(self, delete=True)
-            InterfaceInteraction.alert(self, "Товар убран из корзины.")
+            if product_id is None:
+                InterfaceInteraction.alert(self, "Данное предложение уже "
+                                                 "не актуально")
+                bot.delete_message(self.message.chat.id,
+                                   self.message.message_id)
+            else:
+                query = q.interface_query['cart_id_info'] + str(
+                    self.from_user.id)
+                response = db.execution_of_requests(connection, query)
+                cart_id = response[0][0]
+                query = f"""DELETE FROM cart_product WHERE ctid IN(SELECT ctid 
+                            FROM cart_product WHERE cart_id={cart_id} AND 
+                            product_id={product_id} LIMIT 1)"""
+                db.execution_of_requests(connection, query)
+                connection.close()
+                InterfaceInteraction.cart(self, delete=True)
+                InterfaceInteraction.alert(self, "Товар убран из корзины.")
+        except Exception as e:
+            print('Фатальная ошибка!' + f'\n{str(e)}')
+            return
+
+    def order(self): # Разработать
+        try:
+            return self
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
@@ -285,9 +342,11 @@ class InterfaceInteraction(classmethod):
             elif id_element[0] == 'next':
                 InterfaceInteraction.cart(self)
             elif id_element[0] == 'order':
-                pass
+                InterfaceInteraction.order(self)
             elif id_element[0] == 'continue':
-                pass
+                bot.delete_message(self.message.chat.id,
+                                   self.message.message_id)
+                InterfaceInteraction.display_category(self.message)
             else:
                 pass
             InterfaceInteraction.alert(self)

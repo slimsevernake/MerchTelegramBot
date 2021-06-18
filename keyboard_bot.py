@@ -94,12 +94,12 @@ def show_category(data):
 def show_product(data):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton(text=f"Купить - {data[4]} "
-                                               f"рупий (1 шт.)",
+                                               f"руб (1 шт.)",
                                           callback_data=f"prod_{data[1]}"))
     return markup
 
 
-def cart_keyboard(prev_el, next_el, index, quantity, quantity_product):
+def cart_keyboard(prev_el, next_el, index, quantity, quantity_product, amount):
     markup = types.InlineKeyboardMarkup()
     delete_product = types.InlineKeyboardButton(text="❌",
                                                 callback_data=f"delete_"
@@ -118,7 +118,7 @@ def cart_keyboard(prev_el, next_el, index, quantity, quantity_product):
                                                   callback_data="quantity")
     next_product = types.InlineKeyboardButton(text="➡",
                                               callback_data=f"next_{next_el}")
-    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {0} рупий, "
+    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {amount} руб, "
                                                 f"Оформить?",
                                            callback_data="order")
     continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
@@ -130,7 +130,7 @@ def cart_keyboard(prev_el, next_el, index, quantity, quantity_product):
     return markup
 
 
-def cart_keyboard_min(index, quantity):
+def cart_keyboard_min(index, quantity, amount):
     markup = types.InlineKeyboardMarkup()
     delete_product = types.InlineKeyboardButton(text="❌",
                                                 callback_data=f"delete_"
@@ -142,7 +142,7 @@ def cart_keyboard_min(index, quantity):
                                           callback_data="quantity")
     add_product = types.InlineKeyboardButton(text="⬆",
                                              callback_data=f"add_{index}")
-    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {0} рупий, "
+    order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {amount} руб, "
                                                 f"Оформить?",
                                            callback_data="order")
     continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
