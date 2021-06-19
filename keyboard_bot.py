@@ -120,7 +120,7 @@ def cart_keyboard(prev_el, next_el, index, quantity, quantity_product, amount):
                                               callback_data=f"next_{next_el}")
     order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {amount} руб, "
                                                 f"Оформить?",
-                                           callback_data="order")
+                                           callback_data=f"order_{amount}")
     continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
                                                callback_data="continue")
     markup.row(delete_product, remove_product, quantity, add_product)
@@ -144,7 +144,7 @@ def cart_keyboard_min(index, quantity, amount):
                                              callback_data=f"add_{index}")
     order_pay = types.InlineKeyboardButton(text=f"✅ Заказ на {amount} руб, "
                                                 f"Оформить?",
-                                           callback_data="order")
+                                           callback_data=f"order_{amount}")
     continue_shop = types.InlineKeyboardButton(text="Продолжить покупки",
                                                callback_data="continue")
     markup.row(delete_product, remove_product, quantity, add_product)

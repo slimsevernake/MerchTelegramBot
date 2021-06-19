@@ -4,9 +4,13 @@ import query as q
 import keyboard_bot as key
 import required as req
 # Import Python Module
+import uuid
 import re
 import threading
 from time import sleep
+import random
+# Other Module
+from telebot.types import LabeledPrice, ShippingOption
 
 bot = req.bot
 
@@ -289,9 +293,23 @@ class InterfaceInteraction(classmethod):
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
-    def order(self): # Разработать
+    def order(self, price):  # Разработать
         try:
-            return self
+            order = str(uuid.uuid4())
+            order = '-'.join(order.split('-')[:-2])
+            price = str(int(price) * 100)
+            order_price = [LabeledPrice(label='Оплата товара:',
+                                        amount=price)]
+            bot.send_invoice(self.message.chat.id, f"Номер заказа: {order}",
+                             f"Описание заказа: {order}", order,
+                             "410694247:TEST:ab8aa8ca-53de-418b-b3c1-"
+                             "2de724817a6b", "RUB", order_price, "")
+            bot.send_message(self.message.chat.id,
+                             "Данные тестовой банковской карты:\n"
+                             "Номер карты: 5555 5555 5555 4444\n"
+                             "Месяц/год: 11/25\n"
+                             "CVV: 000")
+            bot.answer_callback_query(self.id, show_alert=False)
         except Exception as e:
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
@@ -342,7 +360,7 @@ class InterfaceInteraction(classmethod):
             elif id_element[0] == 'next':
                 InterfaceInteraction.cart(self)
             elif id_element[0] == 'order':
-                InterfaceInteraction.order(self)
+                InterfaceInteraction.order(self, id_element[1])
             elif id_element[0] == 'continue':
                 bot.delete_message(self.message.chat.id,
                                    self.message.message_id)

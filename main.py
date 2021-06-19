@@ -243,6 +243,35 @@ def bot_actions():
             print('Фатальная ошибка!' + f'\n{str(e)}')
             return
 
+    @bot.shipping_query_handler(func=lambda query: True)
+    def shipping(shipping_query):
+        print(shipping_query)
+        bot.answer_shipping_query(shipping_query.id, ok=True,
+                                  shipping_options=shipping_options,
+                                  error_message="Произошла ошибка!")
+
+    @bot.pre_checkout_query_handler(func=lambda query: True)
+    def checkout(pre_checkout_query):
+        bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True,
+                                      error_message="Инопланетяне пытались "
+                                                    "украсть CVV вашей "
+                                                    "карты, но мы успешно "
+                                                    "защитили ваши учетные "
+                                                    "данные, повторите "
+                                                    "попытку через несколько "
+                                                    "минут, нам нужно "
+                                                    "немного отдохнуть.")
+
+    @bot.message_handler(content_types=['successful_payment'])
+    def got_payment(message):
+        print(message)
+        bot.send_message(message.chat.id,
+                         "Спасибо за оплату! Мы выполним "
+                         "ваш заказ на `{} {}` как можно скорее!".format(
+                             message.successful_payment.total_amount / 100,
+                             message.successful_payment.currency),
+                         parse_mode='Markdown')
+
 
 polling_thread = threading.Thread(target=bot_polling)
 polling_thread.daemon = True
