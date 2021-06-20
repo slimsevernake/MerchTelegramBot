@@ -1,5 +1,5 @@
 import telebot
 
 # Bot Connect
-token_bot = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
+token_bot = "API-token"
 bot = telebot.TeleBot(token_bot)

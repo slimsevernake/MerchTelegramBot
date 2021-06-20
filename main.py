@@ -10,7 +10,7 @@ from time import sleep
 # Import Other Module
 import telebot
 
-BOT_TOKEN = "1614577997:AAHECoJ6qH6DrKS-MNO1WSUc9HZ5RFr512c"
+BOT_TOKEN = "API-token"
 BOT_INTERVAL = 1
 BOT_TIMEOUT = 30
 bot = None

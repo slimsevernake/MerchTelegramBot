@@ -302,8 +302,7 @@ class InterfaceInteraction(classmethod):
                                         amount=price)]
             bot.send_invoice(self.message.chat.id, f"Номер заказа: {order}",
                              f"Описание заказа: {order}", order,
-                             "410694247:TEST:ab8aa8ca-53de-418b-b3c1-"
-                             "2de724817a6b", "RUB", order_price, "")
+                             "API-token-payments", "RUB", order_price, "")
             bot.send_message(self.message.chat.id,
                              "Данные тестовой банковской карты:\n"
                              "Номер карты: 5555 5555 5555 4444\n"
