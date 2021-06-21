@@ -7,7 +7,7 @@ from psycopg2 import OperationalError
 class ProfileInteraction(classmethod):
     def insert_record(self):
         connection = create_connection(
-            "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+            "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
             "5432"
         )
         data = (
@@ -29,7 +29,7 @@ class ProfileInteraction(classmethod):
 
     def update_record(self):
         connection = create_connection(
-            "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+            "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
             "5432"
         )
         data = (
@@ -43,7 +43,7 @@ class ProfileInteraction(classmethod):
 
     def select_record(self):
         connection = create_connection(
-            "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+            "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
             "5432"
         )
         data = self.chat_id
@@ -54,7 +54,7 @@ class ProfileInteraction(classmethod):
 
     def verification_user(self):
         connection = create_connection(
-            "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+            "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
             "5432"
         )
         data = self.from_user.id
@@ -88,7 +88,7 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
 
 
 connection = create_connection(
-    "postgres", "postgres", "Qsf98%x$", "127.0.0.1", "5432"
+    "postgres", "postgres", "password_db", "127.0.0.1", "5432"
 )
 
 
@@ -102,7 +102,7 @@ def create_database(connection):
     for key in query.create_database:
         try:
             connection = create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+                "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
                 "5432"
             )
             execution_of_requests(connection, query.create_database[key])
