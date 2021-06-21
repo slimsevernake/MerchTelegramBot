@@ -22,7 +22,7 @@ class InterfaceInteraction(classmethod):
     def display_category(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+                "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
                 "5432"
             )
             category = db.execution_of_requests(connection,
@@ -44,7 +44,7 @@ class InterfaceInteraction(classmethod):
     def display_cart(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "merch_telegram_bot_db", "postgres", "password_db",
                 "127.0.0.1",
                 "5432"
             )
@@ -106,7 +106,7 @@ class InterfaceInteraction(classmethod):
     def cart(self, delete=None):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "merch_telegram_bot_db", "postgres", "password_db",
                 "127.0.0.1",
                 "5432"
             )
@@ -196,7 +196,7 @@ class InterfaceInteraction(classmethod):
     def delete_product(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "merch_telegram_bot_db", "postgres", "password_db",
                 "127.0.0.1",
                 "5432"
             )
@@ -228,7 +228,7 @@ class InterfaceInteraction(classmethod):
     def add_product(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "merch_telegram_bot_db", "postgres", "password_db",
                 "127.0.0.1",
                 "5432"
             )
@@ -261,7 +261,7 @@ class InterfaceInteraction(classmethod):
     def remove_product(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$",
+                "merch_telegram_bot_db", "postgres", "password_db",
                 "127.0.0.1",
                 "5432"
             )
@@ -316,7 +316,7 @@ class InterfaceInteraction(classmethod):
     def callback_data_handler(self):
         try:
             connection = db.create_connection(
-                "merch_telegram_bot_db", "postgres", "Qsf98%x$", "127.0.0.1",
+                "merch_telegram_bot_db", "postgres", "password_db", "127.0.0.1",
                 "5432"
             )
             id_element = extract_id(self.data)
